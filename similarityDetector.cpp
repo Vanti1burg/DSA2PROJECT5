@@ -9,6 +9,8 @@
 #include "similarityDetector.hpp"
 using namespace std;
 
+//similariyDetector constructor, takes the file name and opens file to find string number, which then creates the similarity matrix
+//initializs default values in similarity matrix to dash to show uncomputed value.
 
 similarityDetector::similarityDetector(string fileName) {
 
@@ -32,9 +34,10 @@ similarityDetector::similarityDetector(string fileName) {
     file.close();
 
     similarityMatrix.resize(numStrings,vector<char>(numStrings,'-'));
+//compute similarity for each pair of strings, only compute upper triangle since it is all that is needed for this symetric matrix
 
     for (int i=0; i<numStrings; i++) {
-
+        //find string based on line number, then compute similarity and fill in matrix based on result
         for(int j=i+1; j<numStrings; j++){
 
            x= readLine(fileName,i+2);
@@ -64,12 +67,15 @@ void similarityDetector::computeSimilarity(string string1, string string2, int i
     m=y.length();
     c.assign(n+1, vector<int>(m+1,0));
     computeLCS();
-    
+//basically just takes parameters and sets up the compute lcs function, kind of a buffer that isnt really needed
+// but I created it in the process of completing this project and saw no reason to change it since it works    
 
 }
 
   void similarityDetector::computeLCS() {
-
+    //similar to regular LCS function but does not need to reconstruct
+    //creates a c array and fills it normally, then uses final values to compute similarity and fill 
+    //matrix based on thresholds stated in project document
          int lcsLength=0;
         
             for (int i=0 ; i<=n; i++) {
@@ -99,7 +105,12 @@ void similarityDetector::computeSimilarity(string string1, string string2, int i
 
                  }
             }
+            //lcsLength in bottom right 
                 lcsLength=c[n][m];
+
+            //compute similarity, basically if length of lcs is close to length of shorter string and longer string is not much longer 
+            //then high sim, this follows for other thresholds, most notably even if the lcs is 100 percent of shorter string,
+            //if longer string is much longer than shorter than it gets a lower similarity rating.
 
             double similarity= (double)lcsLength/min(n,m);
 
@@ -124,6 +135,7 @@ void similarityDetector::computeSimilarity(string string1, string string2, int i
 
         }
  
+//prints similarity matrix for upper triangle
 
 void similarityDetector::printSimilarityMatrix() {
 
@@ -142,6 +154,9 @@ void similarityDetector::printSimilarityMatrix() {
     }
 
 }
+//this is used to grab strings from file without having to load entire file into memory or array
+//this isn't the most efficient way since it has to iterate through file till it reaches line number
+//but it does achieve the goal of not loading whole file into array
 
 string similarityDetector::readLine(string fileName, int lineNumber) {
 

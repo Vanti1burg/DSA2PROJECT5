@@ -8,7 +8,7 @@
 using namespace std;
 
 
-
+//lcs constructor, creates the 2d c vector and initializes everything, creates internal strings to pass through algorithm
 LCS::LCS(string string1, string string2) {
 
              x=string1;
@@ -23,9 +23,13 @@ LCS::LCS(string string1, string string2) {
         }
 
 
+//computeLCS function, fills the c array with lengths of longest common subsequence 
+//at that particular point, uses 'c' array but no 'b' array
+
+
 void LCS:: computeLCS() {
 
-        
+        //assign values to c array based on character matches or surrounding values
             for (int i=0 ; i<=n; i++) {
 
                  for (int j=0; j<m;j++){
@@ -51,6 +55,9 @@ void LCS:: computeLCS() {
             }
 
         }
+//reconstructs lcs from c matrix from bottom right to top left
+//if characters match, add to lcs and move diagonally, if not move to the larger of two surrounding values
+//reverse at the end since it builds backawrds.
 
 string LCS::getLCS() {
 
